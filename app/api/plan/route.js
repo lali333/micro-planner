@@ -3,35 +3,27 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export async function POST(req) {
   const { task } = await req.json();
 
-  if (!process.env.GEMINI_API_KEY) {
-    return new Response(JSON.stringify({ error: "GEMINI_API_KEY is not set" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+  const model = genAI.getGenerativeModel({ model: "gemini-3-pro-preview" });
 
   const prompt = `
-    Break this task into 3–6 clear steps.
-    For each step, output JSON:
-
-    { "title": "...", "duration": minutes }
+    Break the following task into 3–10 clear steps.
+    For each step, return: { "title": string, "duration": number in minutes }
 
     Task: "${task}"
+
     Return ONLY valid JSON:
     {
-      "steps": [ ... ]
+      "steps": [
+        { "title": "...", "duration": ... }
+      ]
     }
   `;
 
   const result = await model.generateContent(prompt);
-
-  // Extract text
   const text = result.response.text();
 
-  // Parse JSON safely
   const cleaned = text
     .replace(/```json/gi, "")
     .replace(/```/g, "")

@@ -467,7 +467,7 @@ useEffect(() => {
           setRewindArmed(false);
       };
 
-      // If we're early in the step or the rewind was already armed, go to the previous step
+      // If early in the step or the rewind was already armed, go to the previous step
       if (elapsed <= 10 || rewindArmed) {
           goToPreviousStep();
           return;
