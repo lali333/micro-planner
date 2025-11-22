@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "MicroPlanner | plan.ai",
+  title: "planna | ai powered planner",
   description: "Task step generator and time estimator",
 };
 

@@ -1,4 +1,4 @@
-# MicroPlanner | plan.ai
+# planna | AI-powered Planner 
 
 A focused micro-planning UI that breaks complex tasks into timed steps, helps you run them in “focus mode” and keeps lightweight progress locally in the browser.
 
@@ -76,7 +76,7 @@ npm run dev
 
 ## 📂 Key Files
 - `app/page.tsx` – renders the planner.
-- `app/layout.tsx` – global layout, base font, metadata (tab title “MicroPlanner | plan.ai”).
+- `app/layout.tsx` – global layout, base font, metadata (tab title “planna | ai powered planner”).
 - `app/loading.tsx` – page-level loader using the dot animation.
 - `app/api/plan/route.js` – Gemini step generation (server).
 - `components/microplanner.jsx` – main UI, timers, loader, sounds, persistence.
