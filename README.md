@@ -62,4 +62,4 @@ npm run dev
 - If you ever committed a key, rotate it. Searching history for the literal key (or a fragment) returning nothing means you’re safe.***
 
 ## License
-MIT
+[MIT](https://choosealicense.com/licenses/mit/#)
