@@ -10,7 +10,7 @@ A focused micro-planning UI that breaks complex tasks into timed steps, helps yo
 - **Polished UI/UX:** Animated dot loader, analog clock visualization, custom fonts/icons, off-white dotted backdrop, hover states.
 - **Status icons:** Star variants indicate untouched / in-progress / done.
 
-## 🧰 Tech Stack
+## 👩‍💻 Tech Stack
 - **Framework:** Next.js 16 (App Router), React 19.
 - **Styling:** Tailwind CSS v4 (imported in `app/globals.css`) + component-level JSX styles.
 - **Icons:** `lucide-react`, `react-icons` (Pi/Lu/Lia/Tb sets).
