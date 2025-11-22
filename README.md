@@ -2,7 +2,24 @@
 
 A focused micro-planning UI that breaks complex tasks into timed steps, helps you run them in “focus mode” and keeps lightweight progress locally in the browser.
 
+<p align="center">
+  <img src="public/microplanner-hero-2.png" alt="MicroPlanner hero" width="760" />
+  <br />
+  <em>task step generator and time estimator</em>
+</p>
+
 ## 🚀 Features
+
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="public/microplanner-steps-2.png" alt="MicroPlanner steps view" width="360" /></td>
+      <td><img src="public/microplanner-steps-complete.png" alt="MicroPlanner completed steps view" width="360" /></td>
+      <td><img src="public/microplanner-focus.png" alt="MicroPlanner focus mode" width="360" /></td>
+    </tr>
+  </table>
+</div>
+
 - **AI step generation:** Calls Gemini (model `gemini-3-pro-preview`) via `/api/plan` to produce 3–10 steps with minute estimates.
 - **Focus mode timer:** An immersive, full-screen timer featuring a per-step countdown clock with restart/rewind logic, audible completion beeps (3 short + 1 long), and progress bars.
 - **Accordion editing:** Click any task to expand, rename steps, adjust durations, add steps, mark complete or drag & drop tasks to reorder task list.
@@ -62,4 +79,4 @@ npm run dev
 - If you ever committed a key, rotate it. Searching history for the literal key (or a fragment) returning nothing means you’re safe.***
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/#)
+[MIT](LICENSE.txt)
