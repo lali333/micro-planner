@@ -33,7 +33,7 @@ npm install
 npm run dev
 ```
 
-## 🤖 Gemini / AI Config
+## 🦾 Gemini / AI Config
 - Set your key in `.env.local` (never commit it):
   ```
   GEMINI_API_KEY=your_key_here
