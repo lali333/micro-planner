@@ -5,20 +5,10 @@ A focused micro-planning UI that breaks complex tasks into timed steps, helps yo
 <p align="center">
   <img src="public/microplanner-hero-2.png" alt="MicroPlanner hero" width="760" />
   <br />
-  <em>task step generator and time estimator</em>
+  <em>task orchestrator: generates steps and estimates time</em>
 </p>
 
 ## 🚀 Features
-
-<div align="center">
-  <table>
-    <tr>
-      <td><img src="public/microplanner-steps-2.png" alt="MicroPlanner steps view" width="360" /></td>
-      <td><img src="public/microplanner-steps-complete.png" alt="MicroPlanner completed steps view" width="360" /></td>
-      <td><img src="public/microplanner-focus.png" alt="MicroPlanner focus mode" width="360" /></td>
-    </tr>
-  </table>
-</div>
 
 - **AI step generation:** Calls Gemini (model `gemini-3-pro-preview`) via `/api/plan` to produce 3–10 steps with minute estimates.
 - **Focus mode timer:** An immersive, full-screen timer featuring a per-step countdown clock with restart/rewind logic, audible completion beeps (3 short + 1 long), and progress bars.
@@ -26,6 +16,25 @@ A focused micro-planning UI that breaks complex tasks into timed steps, helps yo
 - **Persistence:** Saves projects to `localStorage` (`modern_planner_v1`) so closing the tab keeps your list (per browser).
 - **Polished UI/UX:** Animated dot loader, analog clock visualization, custom fonts/icons, off-white dotted backdrop, hover states.
 - **Status icons:** Star variants indicate untouched / in-progress / done.
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/microplanner-steps-2.png" alt="MicroPlanner steps view" width="420" />
+        <div><em>MicroPlanner steps dropdown</em></div>
+      </td>
+      <td align="center">
+        <img src="public/microplanner-steps-complete.png" alt="MicroPlanner completed steps view" width="420" />
+        <div><em>Status of steps</em></div>
+      </td>
+      <td align="center">
+        <img src="public/microplanner-focus.png" alt="MicroPlanner focus mode" width="420" />
+        <div><em>Focus mode</em></div>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## 👩‍💻 Tech Stack
 - **Framework:** Next.js 16 (App Router), React 19.
@@ -37,7 +46,7 @@ A focused micro-planning UI that breaks complex tasks into timed steps, helps yo
 ## 🛠️ Installation
 1) Clone the repo
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/lali333/micro-planner
 cd micro-planner
 ```
 2) Install dependencies
