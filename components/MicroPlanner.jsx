@@ -4,14 +4,20 @@ import {
   Clock, Trash2, Plus, 
   GripVertical, X, ChevronRight, ChevronDown
 } from 'lucide-react';
-import { PiPlayThin, PiPlayPauseThin } from "react-icons/pi";
+import { PiPlayThin, PiPlayPauseThin, PiPlayDuotone, PiStarFourThin, PiStarFourDuotone, PiStarFourFill } from "react-icons/pi";
+import { TbNorthStar } from "react-icons/tb";
 import { LiaFastForwardSolid } from "react-icons/lia";
-import { LuSparkle } from "react-icons/lu";
 
-// --- 1. FONTS & STYLES ---
+// --- FONTS & STYLES ---
 const FontStyles = () => (
   <style jsx global>{`
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    @font-face {
+      font-family: 'Marker SD';
+      src: url('/fonts/Marker%20SD.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
     
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -20,6 +26,11 @@ const FontStyles = () => (
     .font-digital {
       font-family: 'JetBrains Mono', 'Orbitron', monospace;
       letter-spacing: 0.05em;
+    }
+
+    .font-steps {
+      font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+      font-weight: 200;
     }
 
     /* Custom Scrollbar */
@@ -35,11 +46,9 @@ const FontStyles = () => (
     .bullet-page {
       position: fixed;
       inset: 0;
-      background-color: #fdfbf5;
-      background-image:
-        radial-gradient(circle at 8px 8px, rgba(120, 136, 164, 0.28) 1.2px, transparent 0),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.25));
-      background-size: 28px 28px, 100% 100%;
+      background-color: #f8f5ed;
+      background-image: radial-gradient(circle at 8px 8px, rgba(15, 23, 42, 0.9) 1.25px, transparent 0);
+      background-size: 26px 26px;
       z-index: 0;
     }
 
@@ -55,14 +64,6 @@ const FontStyles = () => (
       pointer-events: none;
     }
 
-    .bullet-margin {
-      position: fixed;
-      inset: 32px 60px;
-      border-left: 2px dotted rgba(239, 68, 68, 0.3);
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.65;
-    }
 
     /* Focus Clock */
     .focus-clock {
@@ -98,73 +99,88 @@ const FontStyles = () => (
       border: 2px solid rgba(255, 255, 255, 0.85);
       border-left: none;
     }
+
+    .font-marker {
+      font-family: 'Marker SD', 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: 0.2em;
+    }
   `}</style>
 );
 
-// --- 2. ASSETS ---
+// --- ASSETS ---
 const ALARM_SOUND_URL = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
 
-// --- 3. CHROME LOADER ---
-const ChromeLoader = () => (
-  <div className="flex flex-col items-center justify-center space-y-8 z-50 fade-in">
-    <div className="relative w-32 h-32 flex items-center justify-center">
-      <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_4s_linear_infinite]" style={{ overflow: 'visible' }}>
-        <defs>
-          <linearGradient id="liquidChrome" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#e2e8f0"><animate attributeName="stop-color" values="#e2e8f0; #ffffff; #e2e8f0" dur="2s" repeatCount="indefinite" /></stop>
-            <stop offset="50%" stopColor="#ffffff"><animate attributeName="offset" values="0.4; 0.6; 0.4" dur="3s" repeatCount="indefinite" /></stop>
-            <stop offset="100%" stopColor="#cbd5e1" />
-          </linearGradient>
-          <filter id="gooey"><feGaussianBlur in="SourceGraphic" stdDeviation="1" /><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7" /></filter>
-        </defs>
-        <path d="M50 0 L55 40 L95 35 L60 55 L85 85 L50 65 L15 85 L40 55 L5 35 L45 40 Z" fill="url(#liquidChrome)" filter="url(#gooey)" />
-      </svg>
-    </div>
-    <p className="text-slate-400 text-xs font-medium tracking-[0.3em] uppercase animate-pulse">Analyzing</p>
-  </div>
-);
+// --- CHROME LOADER ---
+const DOTS = [
+  { x: 0, y: -56, size: 9 },
+  { x: 0, y: 56, size: 9 },
+  { x: -56, y: 0, size: 9 },
+  { x: 56, y: 0, size: 9 },
+  { x: 0, y: -28, size: 13 },
+  { x: 0, y: 28, size: 13 },
+  { x: -28, y: 0, size: 13 },
+  { x: 28, y: 0, size: 13 },
+  { x: 0, y: 0, size: 16 },
+  { x: -18, y: -18, size: 7 },
+  { x: 18, y: -18, size: 7 },
+  { x: -18, y: 18, size: 7 },
+  { x: 18, y: 18, size: 7 },
+  { x: -10, y: 0, size: 6 },
+  { x: 10, y: 0, size: 6 },
+  { x: 0, y: -10, size: 6 },
+  { x: 0, y: 10, size: 6 },
+];
 
-// --- 4. ANALOG CLOCK COMPONENT ---
-const AnalogClock = ({ totalSeconds, currentSeconds }) => {
-  // Calculate rotation based on percentage of task done
-  const progress = 1 - (currentSeconds / totalSeconds);
+const ChromeLoader = () => {
+  const [activeDots, setActiveDots] = useState(new Set());
+
+  useEffect(() => {
+    const chooseDots = () => {
+      const count = Math.max(1, Math.floor(Math.random() * 2) + 1); // 1-2 dots
+      const indices = [];
+      const available = [...DOTS.keys()];
+      while (indices.length < count && available.length) {
+        const idx = Math.floor(Math.random() * available.length);
+        indices.push(available.splice(idx, 1)[0]);
+      }
+      setActiveDots(new Set(indices));
+    };
+
+    chooseDots();
+    const id = setInterval(chooseDots, 600);
+    return () => clearInterval(id);
+  }, []);
 
   return (
-    <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full bg-[#f8f9fa] shadow-[inset_10px_10px_30px_rgba(174,174,192,0.2),inset_-10px_-10px_30px_rgba(255,255,255,1)] flex items-center justify-center">
-        {/* Dial Markers */}
-        {[...Array(12)].map((_, i) => (
-            <div key={i} className="absolute w-full h-full flex justify-center pt-4" style={{ transform: `rotate(${i * 30}deg)` }}>
-                <div className={`w-0.5 ${i % 3 === 0 ? 'h-4 bg-slate-400' : 'h-2 bg-slate-200'}`} />
-            </div>
-        ))}
-
-        {/* The "Hand" / Progress Arc */}
-        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-             <circle cx="50" cy="50" r="40" fill="none" stroke="#f0e2e2ff" strokeWidth="1" />
-             <circle 
-                cx="50" cy="50" r="40" fill="none" stroke="#343942ff" strokeWidth="2" 
-                strokeDasharray="251.2" 
-                strokeDashoffset={251.2 * (1 - progress)}
-                strokeLinecap="round"
-                className="transition-[stroke-dashoffset] duration-1000 ease-linear"
-             />
-        </svg>
-        
-        {/* Center Dot */}
-        <div className="w-3 h-3 bg-slate-800 rounded-full z-10 shadow-lg" />
-        
-        {/* Second Hand (Visual only) */}
-        <div 
-            className="absolute w-0.5 h-1/2 bg-red-400 origin-bottom bottom-1/2 left-1/2 transition-transform duration-1000 ease-linear z-0"
-            style={{ transform: `rotate(${progress * 360}deg)` }}
-        />
+    <div className="flex flex-col items-center justify-center space-y-2 text-center z-50 fade-in">
+      <div className="relative w-40 h-40 sm:w-44 sm:h-44 mx-auto">
+        {DOTS.map((dot, idx) => {
+          const isActive = activeDots.has(idx);
+          const scale = isActive ? 1.9 : 1;
+          return (
+            <div
+              key={idx}
+              className="absolute rounded-full bg-slate-900 transition-transform duration-500 ease-in-out"
+              style={{
+                width: dot.size,
+                height: dot.size,
+                left: '50%',
+                top: '50%',
+                transform: `translate(${dot.x}px, ${dot.y}px) scale(${scale})`,
+                boxShadow: isActive ? '0 0 0 8px rgba(15,23,42,0.06)' : 'none',
+              }}
+            />
+          );
+        })}
+      </div>
+      <p className="text-slate-500 text-xs font-medium tracking-[0.3em] uppercase animate-pulse">Analyzing</p>
     </div>
   );
 };
 
-// --- 5. MAIN LOGIC ---
+// --- MAIN LOGIC ---
 
-// Removed unused 'task' parameter
+// Remove unused 'task' parameter
 const fetchAIPlan = async (task) => {
   const res = await fetch("/api/plan", {
     method: "POST",
@@ -182,6 +198,7 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 const normalizeProjects = (projects = []) => projects.map(project => ({
     ...project,
     completed: !!project.completed,
+    position: project.position || { x: 0, y: 0 },
     steps: (project.steps || []).map(step => {
         const duration = Number(step.duration) || 0;
         const totalSeconds = duration * 60;
@@ -220,6 +237,9 @@ export default function ModernMicroPlanner() {
   const [focusStepIndex, setFocusStepIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [rewindArmed, setRewindArmed] = useState(false);
+  const [draggingProjectId, setDraggingProjectId] = useState(null);
+  const dragPositionRef = useRef({ x: 0, y: 0, startX: 0, startY: 0, projectId: null });
 
   // Drag and Drop State
   const dragItem = useRef(null);
@@ -227,6 +247,7 @@ export default function ModernMicroPlanner() {
 
   const audioRef = useRef(null);
   const inputRef = useRef(null);
+  const audioCtxRef = useRef(null);
 
   // Load/Save
 useEffect(() => {
@@ -254,6 +275,7 @@ useEffect(() => {
         id: generateId(),
         title: taskInput,
         completed: false,
+        position: { x: 0, y: 0 },
         steps: result.steps.map(s => ({
           ...s, 
           completed: false,
@@ -261,7 +283,10 @@ useEffect(() => {
         })),
         createdAt: Date.now()
       };
-      setProjects(prev => [newProject, ...prev]);
+      setProjects(prev => {
+        const posY = prev.length * 220;
+        return [{ ...newProject, position: { x: 0, y: posY } }, ...prev];
+      });
       setTaskInput('');
     } catch (err) {
       console.error(err);
@@ -281,6 +306,41 @@ useEffect(() => {
     dragOverItem.current = null;
     setProjects(_projects);
   };
+
+  // Free-move task cards
+  const handleProjectMouseDown = (projectId) => (e) => {
+      if (['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'].includes(e.target.tagName)) return;
+      const project = projects.find(p => p.id === projectId);
+      if (!project) return;
+      const pos = project.position || { x: 0, y: 0 };
+      dragPositionRef.current = { x: pos.x, y: pos.y, startX: e.clientX, startY: e.clientY, projectId };
+      setDraggingProjectId(projectId);
+  };
+
+  useEffect(() => {
+      if (!draggingProjectId) return;
+
+      const handleMove = (e) => {
+          const { x, y, startX, startY, projectId } = dragPositionRef.current;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          const nextX = x + dx;
+          const nextY = y + dy;
+          setProjects(prev => prev.map(p => p.id === projectId ? { ...p, position: { x: nextX, y: nextY } } : p));
+      };
+
+      const handleUp = () => {
+          setDraggingProjectId(null);
+          dragPositionRef.current = { x: 0, y: 0, startX: 0, startY: 0, projectId: null };
+      };
+
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('mouseup', handleUp);
+      return () => {
+          window.removeEventListener('mousemove', handleMove);
+          window.removeEventListener('mouseup', handleUp);
+      };
+  }, [draggingProjectId]);
 
   // Editing Logic
   const updateStep = (projId, stepIndex, field, value) => {
@@ -322,6 +382,13 @@ useEffect(() => {
       }));
   };
 
+  // Autosize helper for multiline step inputs
+  const autoSizeTextarea = (el) => {
+      if (!el) return;
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+  };
+
   const toggleProjectCompleted = (projId) => {
       setProjects(prev => prev.map(p => p.id === projId ? { ...p, completed: !p.completed } : p));
   };
@@ -341,6 +408,46 @@ useEffect(() => {
       setIsTimerRunning(true);
   };
 
+  // Reset rewind arming when the focused step changes
+  useEffect(() => {
+      setRewindArmed(false);
+  }, [focusStepIndex, activeProjectId]);
+
+  // Play 3 quick beeps followed by one longer beep when a step ends
+  const playStepCompletionSound = () => {
+      try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!audioCtxRef.current) {
+              audioCtxRef.current = new AudioContext();
+          }
+          const ctx = audioCtxRef.current;
+          const startTime = ctx.currentTime;
+
+          const playTone = (frequency, delay, duration, volume = 0.08) => {
+              const oscillator = ctx.createOscillator();
+              const gainNode = ctx.createGain();
+              oscillator.type = 'sine';
+              oscillator.frequency.value = frequency;
+              oscillator.connect(gainNode);
+              gainNode.connect(ctx.destination);
+              gainNode.gain.setValueAtTime(volume, startTime + delay);
+              gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + delay + duration);
+              oscillator.start(startTime + delay);
+              oscillator.stop(startTime + delay + duration);
+          };
+
+          // 3 quick beeps
+          playTone(880, 0, 0.12);
+          playTone(880, 0.18, 0.12);
+          playTone(880, 0.36, 0.12);
+          // Final longer beep
+          playTone(660, 0.6, 0.6, 0.1);
+      } catch (err) {
+          console.error('AudioContext unavailable, using fallback beep', err);
+          audioRef.current?.play();
+      }
+  };
+
   // Timer Effect
   useEffect(() => {
     let interval = null;
@@ -348,7 +455,7 @@ useEffect(() => {
         interval = setInterval(() => setTimeLeft(t => t - 1), 1000);
     } else if (timeLeft === 0 && isTimerRunning) {
         setIsTimerRunning(false);
-        audioRef.current?.play();
+        playStepCompletionSound();
     }
     return () => clearInterval(interval);
   }, [isTimerRunning, timeLeft]);
@@ -371,20 +478,47 @@ useEffect(() => {
       const totalSeconds = (currentStep?.duration || 0) * 60;
       const elapsed = Math.max(0, totalSeconds - timeLeft);
 
-      // Restart current if we're within the first 10s or it's the very first step
-      if (elapsed <= 10 || focusStepIndex === 0) {
-          setTimeLeft(totalSeconds);
+      const goToPreviousStep = () => {
+          if (focusStepIndex === 0) {
+              setTimeLeft(totalSeconds);
+              setIsTimerRunning(true);
+              setRewindArmed(true);
+              return;
+          }
+          const prevIndex = Math.max(0, focusStepIndex - 1);
+          const prevStep = project.steps[prevIndex];
+          const prevTotal = (prevStep?.duration || 0) * 60;
+          const prevRemaining = prevTotal || 0;
+          setProjects(prev => prev.map(p => {
+              if (p.id !== activeProjectId) return p;
+              const updatedSteps = p.steps.map((s, idx) => {
+                  if (idx === prevIndex) return { ...s, completed: false, remainingSeconds: prevRemaining };
+                  if (idx === focusStepIndex) return { ...s, completed: false, remainingSeconds: totalSeconds };
+                  return s;
+              });
+              return { ...p, steps: updatedSteps };
+          }));
+          setFocusStepIndex(prevIndex);
+          setTimeLeft(prevRemaining);
           setIsTimerRunning(true);
+          setRewindArmed(false);
+      };
+
+      // If we're early in the step or the rewind was already armed, go to the previous step
+      if (elapsed <= 10 || rewindArmed) {
+          goToPreviousStep();
           return;
       }
 
-      // Otherwise, jump to the previous step
-      const prevIndex = Math.max(0, focusStepIndex - 1);
-      const prevStep = project.steps[prevIndex];
-      const prevRemaining = typeof prevStep.remainingSeconds === 'number' ? prevStep.remainingSeconds : (prevStep.duration || 0) * 60;
-      setFocusStepIndex(prevIndex);
-      setTimeLeft(prevRemaining);
+      // First rewind: restart current step and arm the next rewind for jumping back
+      setProjects(prev => prev.map(p => {
+          if (p.id !== activeProjectId) return p;
+          const updatedSteps = p.steps.map((s, idx) => idx === focusStepIndex ? { ...s, completed: false, remainingSeconds: totalSeconds } : s);
+          return { ...p, steps: updatedSteps };
+      }));
+      setTimeLeft(totalSeconds);
       setIsTimerRunning(true);
+      setRewindArmed(true);
   };
 
   // Persist remaining time for current step so dashboards show partial progress
@@ -419,20 +553,20 @@ useEffect(() => {
 
       {/* --- VIEW: DASHBOARD --- */}
       {view === 'dashboard' && (
-        <div className="relative z-10 max-w-2xl mx-auto p-6 min-h-screen flex flex-col">
+        <div className="relative z-10 w-full max-w-3xl mx-auto px-8 pt-12 pb-16 min-h-screen flex flex-col">
             
             {/* Header */}
             <div className="mt-12 mb-8 text-center space-y-2">
                 <h1 className="text-4xl font-light tracking-tight text-slate-900">
                    plan.ai
                 </h1>
-                <p className="text-slate-400 text-sm font-medium tracking-widest uppercase">task step generator and time estimator</p>
+                <p className="text-slate-700 text-base font-medium tracking-widest font-marker">task step generator and time estimator</p>
             </div>
 
             {/* INPUT PILL */}
             <div className="relative group mb-12 z-50">
                 {isLoading ? (
-                    <div className="flex justify-center py-4">
+                    <div className="flex justify-center items-center py-12">
                         <ChromeLoader />
                     </div>
                 ) : (
@@ -473,152 +607,166 @@ useEffect(() => {
                     </div>
                 )}
 
-                {projects.map((project, index) => (
-                    <div 
-                        key={project.id}
-                        draggable
-                        onDragStart={() => (dragItem.current = index)}
-                        onDragEnter={() => (dragOverItem.current = index)}
-                        onDragEnd={handleSort}
-                        onDragOver={(e) => e.preventDefault()}
-                        className="bg-white/60 backdrop-blur-md border border-white/50 rounded-3xl shadow-sm hover:shadow-md transition-all group overflow-hidden"
-                    >
-                        {/* Card Header */}
-                        <div className="p-5 flex items-center gap-4">
-                            {/* Drag Handle */}
-                            <div className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500">
-                                <GripVertical size={18} />
-                            </div>
+                {projects.map((project, index) => {
+                    return (
+                        <div
+                            key={project.id}
+                            draggable
+                            onDragStart={() => (dragItem.current = index)}
+                            onDragEnter={() => (dragOverItem.current = index)}
+                            onDragEnd={handleSort}
+                            onDragOver={(e) => e.preventDefault()}
+                            className="bg-white/60 backdrop-blur-md border border-white/50 rounded-3xl shadow-sm hover:shadow-md transition-all group overflow-hidden"
+                        >
+                            {/* Card Header */}
+                            <div className="p-5 flex items-center gap-4">
+                                {/* Drag Handle */}
+                                <div className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500">
+                                    <GripVertical size={18} />
+                                </div>
 
-                            {/* Title & Info */}
-                            <div className="flex-1 flex flex-col gap-2">
-                                <div className="flex items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={project.completed}
-                                        onChange={() => toggleProjectCompleted(project.id)}
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="w-4 h-4 rounded-sm border-2 border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-300"
-                                        style={{ accentColor: '#000' }}
-                                        aria-label="Mark task as complete"
-                                    />
-                                    <div 
-                                        className="cursor-pointer"
-                                        onClick={() => setExpandedProjectId(expandedProjectId === project.id ? null : project.id)}
-                                    >
-                                        <h3 className={`text-lg font-medium ${project.completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
-                                            {project.title}
-                                        </h3>
+                                {/* Title & Info */}
+                                <div className="flex-1 flex flex-col gap-2">
+                                    <div className="flex items-center gap-3">
+                                        <input
+                                            type="checkbox"
+                                            checked={project.completed}
+                                            onChange={() => toggleProjectCompleted(project.id)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="w-4 h-4 rounded-sm border-2 border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-300"
+                                            style={{ accentColor: '#000' }}
+                                            aria-label="Mark task as complete"
+                                        />
+                                        <div 
+                                            className="cursor-pointer"
+                                            onClick={() => setExpandedProjectId(expandedProjectId === project.id ? null : project.id)}
+                                        >
+                                            <h3 className={`text-lg font-medium ${project.completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
+                                                {project.title}
+                                            </h3>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center text-xs text-slate-500 font-medium gap-1">
+                                        <span className="inline-flex items-center gap-1 whitespace-nowrap">
+                                            <Clock size={12} /> <span className="font-semibold text-slate-700">{getProjectTotalTime(project.steps)}</span> min
+                                        </span>
+                                        <TbNorthStar size={6} className="text-slate-500 flex-shrink-0 ml-2.5" />
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setExpandedProjectId(expandedProjectId === project.id ? null : project.id);
+                                            }}
+                                            className="flex items-center justify-center gap-[2px] text-slate-500 hover:text-slate-700 transition-colors h-8 px-1.5 leading-none"
+                                        >
+                                        <span className="ml-0.5"><span className="font-semibold text-slate-700">{project.steps.length}</span> steps</span>
+                                            {expandedProjectId === project.id ? (
+                                                <ChevronDown size={14} />
+                                            ) : (
+                                                <ChevronRight size={14} />
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center text-xs text-slate-500 font-medium gap-1">
-                                    <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                                        <Clock size={12} /> {getProjectTotalTime(project.steps)} min
+                                {/* Actions */}
+                                <button 
+                                    onClick={() => enterFocusMode(project.id)}
+                                    className="w-10 h-10 flex items-center justify-center text-slate-900 hover:text-black transition-all hover:drop-shadow-[0_0_16px_rgba(148,163,184,0.95)] hover:brightness-110"
+                                    title="Start Focus Mode"
+                                >
+                                    <span className="relative flex items-center justify-center w-6 h-6 group/icon">
+                                        <PiPlayThin className="text-current transition-opacity duration-150 group-hover/icon:opacity-0" size={20} />
+                                        <PiPlayDuotone className="text-current transition-opacity duration-150 opacity-0 group-hover/icon:opacity-100 absolute" size={20} />
                                     </span>
-                                    <LuSparkle size={14} className="text-slate-500 flex-shrink-0 ml-[2px]" />
-                                    <button
-                                        type="button"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setExpandedProjectId(expandedProjectId === project.id ? null : project.id);
-                                        }}
-                                        className="flex items-center justify-center gap-[2px] text-slate-500 hover:text-slate-700 transition-colors h-8 px-1.5 leading-none"
-                                    >
-                                    <span className="ml-0.5">{project.steps.length} steps</span>
-                                        {expandedProjectId === project.id ? (
-                                            <ChevronDown size={14} />
-                                        ) : (
-                                            <ChevronRight size={14} />
-                                        )}
-                                    </button>
-                                </div>
+                                </button>
                             </div>
 
-                            {/* Actions */}
-                            <button 
-                                onClick={() => enterFocusMode(project.id)}
-                                className="w-10 h-10 flex items-center justify-center text-slate-900 hover:text-black transition-all hover:drop-shadow-[0_0_16px_rgba(148,163,184,0.95)] hover:brightness-110"
-                                title="Start Focus Mode"
-                            >
-                                <span className="flex items-center justify-center w-full h-full">
-                                    <PiPlayThin className="text-current" size={20} />
-                                </span>
-                            </button>
-                        </div>
+                            {/* Accordion Body */}
+                            {expandedProjectId === project.id && (
+                                <div className="bg-white/50 border-t border-slate-100 p-5 animate-in slide-in-from-top-2 fade-in duration-200">
+                                    <div className="flex items-center justify-between mb-4 px-2">
+                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Execution Steps</span>
+                                        <button onClick={() => addStep(project.id)} className="text-black hover:text-slate-700 text-xs font-bold flex items-center gap-1">
+                                            <Plus size={12} /> Add Step
+                                        </button>
+                                    </div>
 
-                        {/* Accordion Body */}
-                        {expandedProjectId === project.id && (
-                            <div className="bg-white/50 border-t border-slate-100 p-5 animate-in slide-in-from-top-2 fade-in duration-200">
-                                <div className="flex items-center justify-between mb-4 px-2">
-                                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Execution Steps</span>
-                                    <button onClick={() => addStep(project.id)} className="text-black hover:text-slate-700 text-xs font-bold flex items-center gap-1">
-                                        <Plus size={12} /> Add Step
-                                    </button>
-                                </div>
+                                <div className="space-y-3 relative font-steps">
+                                        {/* Vertical Line Connector */}
+                                        <div className="absolute left-[15px] top-2 bottom-2 w-[2px] bg-slate-100" />
 
-                                <div className="space-y-3 relative">
-                                    {/* Vertical Line Connector */}
-                                    <div className="absolute left-[15px] top-2 bottom-2 w-[2px] bg-slate-100" />
+                                        {project.steps.map((step, stepIdx) => {
+                                            const progress = Math.round(getStepProgress(step) * 100);
+                                            const minutesLeft = Math.max(0, Math.ceil((step.remainingSeconds ?? step.duration * 60) / 60));
+                                            const isActiveFocusStep = view === 'focus' && activeProjectId === project.id && focusStepIndex === stepIdx;
+                                            const statusIcon = (() => {
+                                                if (step.completed) return <PiStarFourFill className="text-slate-900" size={18} />;
+                                                if (isActiveFocusStep || progress > 0) return <PiStarFourDuotone className="text-slate-700" size={18} />;
+                                                return <PiStarFourThin className="text-slate-500" size={18} />;
+                                            })();
 
-                                    {project.steps.map((step, stepIdx) => {
-                                        const progress = Math.round(getStepProgress(step) * 100);
-                                        const minutesLeft = Math.max(0, Math.ceil((step.remainingSeconds ?? step.duration * 60) / 60));
-
-                                        return (
-                                            <div key={stepIdx} className="relative pl-8 flex flex-col gap-2 group/step">
-                                                {/* Node */}
-                                                <div className={`absolute left-[9px] top-[10px] w-3.5 h-3.5 rounded-full border-2 bg-white z-10 transition-colors ${step.completed ? 'border-black bg-slate-900' : 'border-slate-300'}`} />
-                                                
-                                                <div className="flex items-start gap-3">
-                                                    <div className="flex-1">
-                                                        <input 
-                                                            className="w-full bg-transparent border-none p-0 text-sm font-medium text-slate-700 focus:ring-0 focus:text-blue-600 placeholder:text-slate-300"
-                                                            value={step.title}
-                                                            onChange={(e) => updateStep(project.id, stepIdx, 'title', e.target.value)}
-                                                        />
+                                            return (
+                                                <div key={stepIdx} className="relative pl-8 flex flex-col gap-2 group/step">
+                                                    {/* Node */}
+                                                    <div className="absolute left-[6px] top-[6px] z-10">
+                                                        {statusIcon}
                                                     </div>
                                                     
-                                                    <div className="flex items-center gap-2 border-2 border-dashed border-black/70 bg-white/80 rounded-md px-3 py-1 shadow-[0_4px_14px_rgba(0,0,0,0.04)]">
-                                                        <input 
-                                                            type="number"
-                                                            className="w-12 bg-transparent text-right text-xs font-mono text-slate-700 focus:outline-none appearance-none m-0"
-                                                            value={step.duration}
-                                                            onChange={(e) => updateStep(project.id, stepIdx, 'duration', e.target.value)}
-                                                        />
-                                                        <span className="text-[11px] text-slate-600 font-semibold whitespace-nowrap">min</span>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:gap-4">
+                                                        <div className="flex-1 min-w-[220px] sm:min-w-[280px] max-w-full">
+                                                            <textarea
+                                                                rows={1}
+                                                                className="w-full bg-transparent border-none p-0 text-sm font-medium text-slate-700 focus:ring-0 focus:text-blue-600 placeholder:text-slate-300 resize-none leading-6 overflow-hidden"
+                                                                ref={autoSizeTextarea}
+                                                                value={step.title}
+                                                                onChange={(e) => updateStep(project.id, stepIdx, 'title', e.target.value)}
+                                                                onInput={(e) => autoSizeTextarea(e.target)}
+                                                            />
+                                                        </div>
+                                                        
+                                                        <div className="flex items-center gap-2 border-2 border-dashed border-black/70 bg-white/80 rounded-md px-3 py-1 shadow-[0_4px_14px_rgba(0,0,0,0.04)] flex-shrink-0">
+                                                            <input 
+                                                                type="number"
+                                                                className="w-12 bg-transparent text-right text-xs font-mono text-slate-700 focus:outline-none appearance-none m-0"
+                                                                value={step.duration}
+                                                                onChange={(e) => updateStep(project.id, stepIdx, 'duration', e.target.value)}
+                                                            />
+                                                            <span className="text-[11px] text-slate-600 font-semibold whitespace-nowrap">min</span>
+                                                        </div>
                                                     </div>
-                                                </div>
 
                                                     <div className="flex flex-col gap-1">
-                                                    <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                                                        <div 
-                                                            className={`h-full rounded-full transition-all duration-500 ${step.completed ? 'bg-black' : 'bg-slate-400'}`} 
-                                                            style={{ width: `${progress}%` }} 
-                                                        />
-                                                    </div>
-                                                    <div className="flex justify-between text-[10px] text-slate-400 uppercase tracking-[0.08em]">
-                                                        <span>{progress}% done</span>
-                                                        <span>{minutesLeft}m left</span>
+                                                        <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                                                            <div 
+                                                                className={`h-full rounded-full transition-all duration-500 ${step.completed ? 'bg-black' : 'bg-slate-400'}`} 
+                                                                style={{ width: `${progress}%` }} 
+                                                            />
+                                                        </div>
+                                                        <div className="flex justify-between text-[10px] text-slate-400 uppercase tracking-[0.08em]">
+                                                            <span>{progress}% done</span>
+                                                            <span>{minutesLeft}m left</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                            );
+                                        })}
+                                    </div>
 
-                                <div className="mt-6 flex justify-end">
-                                     <button 
-                                        onClick={() => setProjects(projects.filter(p => p.id !== project.id))}
-                                        className="text-red-400 hover:text-red-600 text-xs flex items-center gap-1 px-3 py-2 hover:bg-red-50 rounded-lg transition-colors"
-                                    >
-                                        <Trash2 size={14} /> Delete Task
-                                    </button>
+                                    <div className="mt-6 flex justify-end">
+                                         <button 
+                                            onClick={() => setProjects(projects.filter(p => p.id !== project.id))}
+                                            className="text-red-400 hover:text-red-600 text-xs flex items-center gap-1 px-3 py-2 hover:bg-red-50 rounded-lg transition-colors"
+                                        >
+                                            <Trash2 size={14} /> Delete Task
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                ))}
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </div>
       )}
@@ -638,7 +786,7 @@ useEffect(() => {
          
          return (
             <div className="fixed inset-0 z-50 bg-black text-white flex flex-col">
-                <div className="flex items-center justify-between px-6 md:px-10 py-6 text-[10px] tracking-[0.38em] uppercase text-white/60">
+                <div className="grid grid-cols-[auto_1fr_auto] items-center px-6 md:px-10 py-6 text-[10px] tracking-[0.38em] uppercase text-white/60 gap-3">
                     <button
                         onClick={() => {
                             setIsTimerRunning(false);
@@ -649,7 +797,7 @@ useEffect(() => {
                         <X size={16} />
                         <span className="hidden sm:inline">Exit</span>
                     </button>
-                    <span className="font-semibold text-white/80 truncate max-w-[40vw] text-center">{project.title}</span>
+                    <span className="font-semibold text-white/80 truncate max-w-full text-center justify-self-center px-2">{project.title}</span>
                     <span className="w-[120px]" aria-hidden="true" />
                 </div>
 
@@ -661,11 +809,11 @@ useEffect(() => {
                     </div>
                 </div>
 
-                <div className="pb-8 flex flex-col items-center gap-4">
+                <div className="pb-8 flex flex-col items-center gap-4 px-4 text-center">
                     <div className="text-xs uppercase tracking-[0.3em] text-white/60">
                         Step {focusStepIndex + 1} / {project.steps.length}
                     </div>
-                    <div className="text-sm md:text-base text-white/80 text-center px-6">
+                    <div className="text-sm md:text-base text-white/80 text-center px-6 max-w-3xl">
                         {currentStep.title}
                     </div>
                     <div className="w-full max-w-3xl px-6 mt-6">
