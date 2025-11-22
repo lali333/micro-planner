@@ -3,6 +3,13 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export async function POST(req) {
   const { task } = await req.json();
 
+  if (!process.env.GEMINI_API_KEY) {
+    return new Response(JSON.stringify({ error: "GEMINI_API_KEY is not set" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 

@@ -7,6 +7,11 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+export const metadata = {
+  title: "MicroPlanner | plan.ai",
+  description: "Task step generator and time estimator",
+};
+
 export default function RootLayout({
   children,
 }: {

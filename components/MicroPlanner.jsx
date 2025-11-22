@@ -131,7 +131,7 @@ const DOTS = [
   { x: 0, y: 10, size: 6 },
 ];
 
-const ChromeLoader = () => {
+export const ChromeLoader = ({ label = "Analyzing" }) => {
   const [activeDots, setActiveDots] = useState(new Set());
 
   useEffect(() => {
@@ -173,7 +173,7 @@ const ChromeLoader = () => {
           );
         })}
       </div>
-      <p className="text-slate-500 text-xs font-medium tracking-[0.3em] uppercase animate-pulse">Analyzing</p>
+      <p className="text-slate-500 text-xs font-medium tracking-[0.3em] uppercase animate-pulse">{label}</p>
     </div>
   );
 };
@@ -238,8 +238,6 @@ export default function ModernMicroPlanner() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [rewindArmed, setRewindArmed] = useState(false);
-  const [draggingProjectId, setDraggingProjectId] = useState(null);
-  const dragPositionRef = useRef({ x: 0, y: 0, startX: 0, startY: 0, projectId: null });
 
   // Drag and Drop State
   const dragItem = useRef(null);
@@ -306,41 +304,6 @@ useEffect(() => {
     dragOverItem.current = null;
     setProjects(_projects);
   };
-
-  // Free-move task cards
-  const handleProjectMouseDown = (projectId) => (e) => {
-      if (['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'].includes(e.target.tagName)) return;
-      const project = projects.find(p => p.id === projectId);
-      if (!project) return;
-      const pos = project.position || { x: 0, y: 0 };
-      dragPositionRef.current = { x: pos.x, y: pos.y, startX: e.clientX, startY: e.clientY, projectId };
-      setDraggingProjectId(projectId);
-  };
-
-  useEffect(() => {
-      if (!draggingProjectId) return;
-
-      const handleMove = (e) => {
-          const { x, y, startX, startY, projectId } = dragPositionRef.current;
-          const dx = e.clientX - startX;
-          const dy = e.clientY - startY;
-          const nextX = x + dx;
-          const nextY = y + dy;
-          setProjects(prev => prev.map(p => p.id === projectId ? { ...p, position: { x: nextX, y: nextY } } : p));
-      };
-
-      const handleUp = () => {
-          setDraggingProjectId(null);
-          dragPositionRef.current = { x: 0, y: 0, startX: 0, startY: 0, projectId: null };
-      };
-
-      window.addEventListener('mousemove', handleMove);
-      window.addEventListener('mouseup', handleUp);
-      return () => {
-          window.removeEventListener('mousemove', handleMove);
-          window.removeEventListener('mouseup', handleUp);
-      };
-  }, [draggingProjectId]);
 
   // Editing Logic
   const updateStep = (projId, stepIndex, field, value) => {

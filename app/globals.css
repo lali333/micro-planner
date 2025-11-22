@@ -1,23 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --bg: #f1f2f4;
-  --surface: #f7f8fa;
-  --text: #2a2a2a;
-  --subtle-text: #000000bd;
-
-
-  --accent: #e8ecff; 
-
-
-
-  --radius: 22px;
-
-  /* soft neu-morphic shadows */
-  --shadow-light: -6px -6px 12px rgba(255,255,255,0.8);
-  --shadow-dark: 6px 6px 14px rgba(0,0,0,0.08);
-}
-
 body {
   font-family: var(--font-inter), sans-serif;
 }
