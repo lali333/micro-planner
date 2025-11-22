@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
+import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { 
   Clock, Trash2, Plus, 
   GripVertical, X, ChevronRight, ChevronDown
@@ -504,6 +506,16 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen text-slate-800 relative overflow-x-hidden selection:bg-blue-100">
+      <Script src="https://www.googletagmanager.com/gtag/js?id=G-8N5PS156L1" strategy="afterInteractive" />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-8N5PS156L1');
+        `}
+      </Script>
+      <Analytics />
       <FontStyles />
 
       {/* Bullet journal style background */}
