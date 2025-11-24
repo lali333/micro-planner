@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
+import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { 
   Clock, Trash2, Plus, 
   GripVertical, X, ChevronRight, ChevronDown
@@ -504,6 +506,16 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen text-slate-800 relative overflow-x-hidden selection:bg-blue-100">
+      <Script src="https://www.googletagmanager.com/gtag/js?id=G-8N5PS156L1" strategy="afterInteractive" />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-8N5PS156L1');
+        `}
+      </Script>
+      <Analytics />
       <FontStyles />
 
       {/* Bullet journal style background */}
@@ -521,7 +533,7 @@ useEffect(() => {
             {/* Header */}
             <div className="mt-12 mb-8 text-center space-y-2">
                 <h1 className="text-4xl font-light tracking-tight text-slate-900">
-                   plan.ai
+                   planna
                 </h1>
                 <p className="text-slate-700 text-base font-medium tracking-widest font-marker">task step generator and time estimator</p>
             </div>
@@ -720,7 +732,7 @@ useEffect(() => {
                                     <div className="mt-6 flex justify-end">
                                          <button 
                                             onClick={() => setProjects(projects.filter(p => p.id !== project.id))}
-                                            className="text-red-400 hover:text-red-600 text-xs flex items-center gap-1 px-3 py-2 hover:bg-red-50 rounded-lg transition-colors"
+                                            className="text-black hover:text-black/70 text-xs flex items-center gap-1 px-3 py-2 hover:bg-black/5 rounded-lg transition-colors border border-black/10"
                                         >
                                             <Trash2 size={14} /> Delete Task
                                         </button>
