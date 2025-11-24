@@ -1,10 +1,31 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "1 m"), 
+});
 
 export async function POST(req) {
+  const ip = req.headers.get("x-forwarded-for") || "unknown";
+  const { success } = await ratelimit.limit(ip);
+
+  if (!success) {
+    return new Response(
+      JSON.stringify({ error: "Too many requests. Try again soon." }),
+      { status: 429 }
+    );
+  }
+
   const { task } = await req.json();
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
   const model = genAI.getGenerativeModel({ model: "gemini-3-pro-preview" });
 
   const prompt = `
